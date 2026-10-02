@@ -1,0 +1,35 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - "${JELLYFIN_PORT}:8096"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${JELLYFIN_CONFIG}:/config
+      - ${JELLYFIN_CACHE}:/cache
+      - ${JELLYFIN_MOVIES}:/data/movies
+      - ${JELLYFIN_SERIES}:/data/series
+      - ${JELLYFIN_MUSICS}:/data/musics
+    labels:
+      tsdproxy.enable: "true"
+      tsdproxy.name: "${PROXY_NAME}"
+      
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    restart: unless-stopped
+    ports:
+      - "${SEERR_PORT}:5055"
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+    volumes:
+      - ${SEERR_CONFIG}:/app/config
+    security_opt:
+      - no-new-privileges:true

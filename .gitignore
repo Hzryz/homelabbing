@@ -1,0 +1,7 @@
+# Ignore all actual container data/volumes
+data/
+
+# Ignore sensitive environment files containing passwords
+**/.env
+**/*.secret
+**/*.pwd

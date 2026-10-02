@@ -1,0 +1,26 @@
+services:
+  arcane:
+    image: ghcr.io/getarcaneapp/manager:latest
+    container_name: arcane
+    cgroup: host
+    restart: unless-stopped
+    ports:
+      - "3552:3552"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/docker/data/arcane:/app/data
+    environment:
+      - APP_URL=${URL}
+      - PUID=1000
+      - PGID=1000
+      - ENCRYPTION_KEY=${KEY}
+      - ALLOW_CLI_PASSWORD_RESET=true
+    labels:
+      tsdproxy.enable: "true"
+      tsdproxy.name: "arcane"
+    healthcheck:
+      test: ['CMD', './arcane', 'health', '--timeout', '2s']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s

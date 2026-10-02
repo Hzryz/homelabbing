@@ -1,0 +1,16 @@
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "${WEBUI_PORT}:${WEBUI_PORT}/tcp"
+    environment:
+      - TZ=${TZ}
+      - WEBPASSWORD=${PASSWORD}
+      - FTLCONF_LOCAL_IPV4=192.168.100.251
+    volumes:
+      - ${CONFIG}:/etc/pihole
+      - ${DNSMASQ}:/etc/dnsmasq.d
